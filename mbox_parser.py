@@ -1,3 +1,5 @@
+# !/usr/bin/python3
+# coding: utf-8
 import mailbox
 import base64
 import parse
@@ -8,6 +10,7 @@ import MySQLdb
 import os
 import argparse
 from connectDB import *
+from mail import *
 
 
 parser = argparse.ArgumentParser()
@@ -106,10 +109,10 @@ def parse_title(subject):
 
 def process(table, ip, id, date, content):
     data = insert2table(table, ip, id, date, content)
-    index = content.find('<br><table')
-    #content = content[:index-1] + content[index:]
-    content = str(content[:index]+"       "+content[index:])
-
+    to_user = "peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw, center20@cc.ncu.edu.tw, center15@cc.ncu.edu.tw"
+    #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
+    title = "[NEW]-("+str(ip)+")"+str(subject)
+    
     if(data and data=='140.115.0.0/16'):
         
         print("open failed...")
@@ -120,12 +123,15 @@ def process(table, ip, id, date, content):
         admin_info = admin_info.split(';')
         admin_name = admin_info[0]
         admin_mail = admin_info[1].rstrip()
+        
+        content = header+"<br>"+content
+        from_user = admin_maili
+        mail_function(content, to_user, from_user, title)
     
-        cmd = "LANG=ZH_TW.big5 && echo '"+header+"\n"+content+"' | mail -s '[NEW]-("+str(ip)+")"+str(subject)+"\nContent-Type:text/html' -a 'From: "+admin_name+"<"+admin_mail+">' peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw, center20@cc.ncu.edu.tw, center15@cc.ncu.edu.tw "
-        os.system(cmd)
     elif(data):
-        cmd = "LANG=ZH_TW.big5 && echo '"+content+"' | mail -s '[NEW]-("+str(ip)+")"+str(subject)+"\nContent-Type:text/html' -a 'From: soc@tyrcmp.tyc.edu.tw' peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw, center20@cc.ncu.edu.tw, center15@cc.ncu.edu.tw "
-        os.system(cmd)
+        from_user = "soc@tyrcmp.tyc.edu.tw" 
+        mail_function(content, to_user, from_user, title)
+
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')
