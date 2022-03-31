@@ -1,10 +1,6 @@
 import ipaddress
 import MySQLdb
 
-
-db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
-cursor = db.cursor()
-
 def isSubnet(ip, subnet):
     
     try:
@@ -13,6 +9,9 @@ def isSubnet(ip, subnet):
         return False
 
 def getSubnet(ip):
+    
+    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    cursor = db.cursor()
     sql = "select * from school_net;"
     cursor.execute(sql)
     for row in cursor:
@@ -24,6 +23,8 @@ def getSubnet(ip):
 
 def insert2table(table, ip, id, date, content):
     
+    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    cursor = db.cursor()
     if(table=="soc"):
         #insert into soc
         sql = "insert into soc (soc_id, soc_ip, soc_date, soc_content) VALUES (%s, %s, %s, %s);"
