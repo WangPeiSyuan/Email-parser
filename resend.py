@@ -14,7 +14,7 @@ from sender import *
 
 test=True
 parser = argparse.ArgumentParser()
-parser.add_argument('--check', help='check before cleaning mailbox')
+parser.add_argument('--id', help='id for soc_id/ewa_id', required=True)
 opt = parser.parse_args()
 
 def get_html_text(html):
@@ -85,7 +85,6 @@ def parse_ip(content):
             soup = bs4.BeautifulSoup(date.group(0),'html.parser')
             text = soup.get_text()
             date = re.sub('[\u4e00-\u9fa5]','',text)
-            print("發布時間:", date)
             return ip.group(0), date
             
     return False, False
@@ -97,24 +96,20 @@ def parse_title(subject):
         soc_id = re.search("(事件單編號:.*)", subject)
         soc_id = re.findall('[a-zA-Z0-9\-]', soc_id.group(0))
         soc_id = ''.join(soc_id)
-        print("發布編號:", soc_id)
         return "soc", soc_id
     elif(ewa): 
         ewa_id = re.search("(發布編號:.*)", subject)
         ewa_id = re.findall('[a-zA-Z0-9\-]', ewa_id.group(0))
         ewa_id = ''.join(ewa_id)
-        print("發布編號:", ''.join(ewa_id))
         return "ewa", ewa_id
     return False, False
 
-def process(table, ip, id, date, content):
-    data, admin_mail = insert2table(table, ip, id, date, content)
-    #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
+def process(ip, content):
+
+    subnet, admin_mail = getSubnet(ip)
     title = "[NEW]-("+str(ip)+")"+str(subject)
+    if(subnet =='140.115.0.0/16'):
     
-    if(data and data=='140.115.0.0/16'):
-        
-        print("open failed...")
         f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
         header = f.read()
         f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
@@ -122,7 +117,6 @@ def process(table, ip, id, date, content):
         admin_info = admin_info.split(';')
         admin_name = admin_info[0]
         admin_mail = admin_info[1].rstrip()
-        print(admin_mail)
         from_user = admin_mail
         content = header+"<br>"+content
         to_user=[admin_mail]
@@ -132,8 +126,7 @@ def process(table, ip, id, date, content):
         send_mail(content, to_user, from_user, title)
         send_line(title)
     
-    elif(data):
-        print(admin_mail)
+    elif(subnet):
         from_user = "soc@tyrcmp.tyc.edu.tw" 
         to_user = [admin_mail]
         if(test==True):
@@ -147,20 +140,12 @@ if __name__ == '__main__':
     num_entries = len(mbox_obj)
 
     for idx, email_obj in enumerate(mbox_obj):
-        print('##########parsing email {0} of {1}##############'.format(idx, num_entries))
         email_data = GmailMboxMessage(email_obj)
         content, subject = email_data.parse_email()
-        print(subject)
         ip, date = parse_ip(str(content))
         if(ip):
             table, id = parse_title(str(subject)) #soc/ewa
-            print(ip, table)
-        if(ip and table):
-            if(opt.check):
-                if(checkID(table, id)==False): #before cleaning mailbox, check if DB has the mail, if not insert it
-                    process(table, ip, id, date, str(content))
-                else:
-                    print("ok")
-            else:  
-                process(table, ip, id, date, str(content))
+        if(id == opt.id):  
+            process(ip, str(content))
+            break
 

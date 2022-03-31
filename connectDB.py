@@ -1,13 +1,10 @@
 import ipaddress
 import MySQLdb
 
+
 db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
 cursor = db.cursor()
-#sql = "insert into soc (soc_id, soc_ip, soc_date, soc_content) VALUES (%s, %s, %s, %s);"
-sql = "select soc_content from soc where soc_id='AISAC-199149';"
-cursor.execute(sql)
-for row in cursor:
-    print(row)
+
 def isSubnet(ip, subnet):
     
     try:
@@ -15,9 +12,17 @@ def isSubnet(ip, subnet):
     except:
         return False
 
+def getSubnet(ip):
+    sql = "select * from school_net;"
+    cursor.execute(sql)
+    for row in cursor:
+        subnet = row[1]
+        if(isSubnet(ip, subnet)):
+            admin_mail = row[5]
+            return subnet, admin_mail
+    return False, False
+
 def insert2table(table, ip, id, date, content):
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
-    cursor = db.cursor()
     
     if(table=="soc"):
         #insert into soc
@@ -42,17 +47,17 @@ def insert2table(table, ip, id, date, content):
                     sql = "update ewa set ewa_school='"+row[0]+"' where ewa_id = '"+id+"';"
                 cursor.execute(sql)
                 db.commit()
-                return subnet
+                admin_mail = row[5]
+                return subnet, admin_mail
     except:
         db.close()
         print(id, " already inserted!")
-        return False
+        return False, False
 
+    
 
 def checkID(table, id):
     
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
-    cursor = db.cursor()
     print("check table: ", table)
     if(table=="soc"):
         sql = "select * from soc where soc_id = '"+id+"';"
