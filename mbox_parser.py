@@ -108,39 +108,34 @@ def parse_title(subject):
     return False, False
 
 def process(table, ip, id, date, content):
-    data, admin_mail = insert2table(table, ip, id, date, content)
+    data, admin_mail, admin_line, mail_no, line_no = insert2table(table, ip, id, date, content)
     #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
     title = "[NEW]-("+str(ip)+")"+str(subject)
     
-    if(data and data=='140.115.0.0/16'):
-        
-        print("open failed...")
-        f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
-        header = f.read()
-        f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
-        admin_info = f.read()
-        admin_info = admin_info.split(';')
-        admin_name = admin_info[0]
-        admin_mail = admin_info[1].rstrip()
-        print(admin_mail)
-        from_user = admin_mail
-        content = header+"<br>"+content
-        to_user=[admin_mail]
+    if(data):
+        if(data=='140.115.0.0/16'):
+            f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
+            header = f.read()
+            f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
+            admin_info = f.read()
+            admin_info = admin_info.split(';')
+            admin_name = admin_info[0]
+            admin_mail = admin_info[1].rstrip()
+            print(admin_mail)
+            from_user = admin_mail
+            content = header+"<br>"+content
+            to_user=[admin_mail]
+        else:
+            print(admin_mail)
+            from_user = "soc@tyrcmp.tyc.edu.tw"
+            to_user = [admin_mail]
         if(test==True):
             content = admin_mail+"<br>"+content
             to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
-        send_mail(content, to_user, from_user, title)
-        send_line(title)
-    
-    elif(data):
-        print(admin_mail)
-        from_user = "soc@tyrcmp.tyc.edu.tw" 
-        to_user = [admin_mail]
-        if(test==True):
-            content = admin_mail+"<br>"+content
-            to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
-        send_mail(content, to_user, from_user, title)
-        send_line(title)
+        if(mail_no==1):
+            send_mail(content, to_user, from_user, title)
+        if(line_no==1):
+            send_line(title, admin_line)
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')

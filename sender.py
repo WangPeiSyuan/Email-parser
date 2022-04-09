@@ -19,8 +19,8 @@ def send_mail(msg, to_user, from_user, title):
     server.sendmail(from_user,to_user,message.as_string())
     server.quit()
 
-def send_line(msg):
-    token = 'W4elJYcjhNG6oNypWwMR2r4rS8APoHv8ih5jtcuV5P1'
+def send_line(msg, token):
+    #token = 'W4elJYcjhNG6oNypWwMR2r4rS8APoHv8ih5jtcuV5P1'
 
     headers = {
         "Authorization": "Bearer " + token,

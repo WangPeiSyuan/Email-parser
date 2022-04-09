@@ -48,8 +48,12 @@ def insert2table(table, ip, id, date, content):
                     sql = "update ewa set ewa_school='"+row[0]+"' where ewa_id = '"+id+"';"
                 cursor.execute(sql)
                 db.commit()
+                
                 admin_mail = row[5]
-                return subnet, admin_mail
+                admin_line = row[3]
+                mail_notify = row[6]
+                line_notify = row[7]
+                return subnet, admin_mail, admin_line, mail_notify, line_notify
     except:
         db.close()
         print(id, " already inserted!")
