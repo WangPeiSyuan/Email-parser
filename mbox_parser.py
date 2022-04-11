@@ -132,9 +132,12 @@ def process(table, ip, id, date, content):
         if(test==True):
             content = admin_mail+"<br>"+content
             to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
+        print("mail no:", mail_no, " line no:", line_no)
         if(mail_no==1):
+            print("sending mail...")
             send_mail(content, to_user, from_user, title)
         if(line_no==1):
+            print("sneding line...")
             send_line(title, admin_line)
 
 if __name__ == '__main__':

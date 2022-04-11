@@ -18,8 +18,11 @@ def getSubnet(ip):
         subnet = row[1]
         if(isSubnet(ip, subnet)):
             admin_mail = row[5]
-            return subnet, admin_mail
-    return False, False
+            admin_line = row[3]
+            mail_notify = row[6]
+            line_notify = row[7]
+            return subnet, admin_mail, admin_line, mail_notify, line_notify
+    return False, False, False, False, False
 
 def insert2table(table, ip, id, date, content):
     
@@ -57,7 +60,7 @@ def insert2table(table, ip, id, date, content):
     except:
         db.close()
         print(id, " already inserted!")
-        return False, False
+        return False, False, False, False, False
 
     
 
