@@ -60,7 +60,8 @@ class GmailMboxMessage():
     def _read_email_text(self, msg):
         content_type = 'NA' if isinstance(msg, str) else msg.get_content_type()
         encoding = 'NA' if isinstance(msg, str) else msg.get('Content-Transfer-Encoding', 'NA')
-        if 'text/plain' in content_type:
+        print(content_type)
+        if 'text/plain' in content_type or 'text/html' in content_type:
             msg_text = msg.get_payload()
             if('base64' in encoding):
                 msg_text = base64.b64decode(msg_text)
@@ -133,10 +134,10 @@ def process(table, ip, id, date, content):
             content = admin_mail+"<br>"+content
             to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
         print("mail no:", mail_no, " line no:", line_no)
-        if(mail_no==1):
+        if(mail_no=="1"):
             print("sending mail...")
             send_mail(content, to_user, from_user, title)
-        if(line_no==1):
+        if(line_no=="1"):
             print("sneding line...")
             send_line(title, admin_line)
 

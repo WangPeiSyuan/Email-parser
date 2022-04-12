@@ -49,7 +49,7 @@ class GmailMboxMessage():
     def _read_email_text(self, msg):
         content_type = 'NA' if isinstance(msg, str) else msg.get_content_type()
         encoding = 'NA' if isinstance(msg, str) else msg.get('Content-Transfer-Encoding', 'NA')
-        if 'text/plain' in content_type:
+        if 'text/plain' in content_type or 'text/html' in content_type:
             msg_text = msg.get_payload()
             if('base64' in encoding):
                 msg_text = base64.b64decode(msg_text)
