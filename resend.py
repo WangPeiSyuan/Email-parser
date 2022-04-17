@@ -60,7 +60,7 @@ class GmailMboxMessage():
     def _read_email_text(self, msg):
         content_type = 'NA' if isinstance(msg, str) else msg.get_content_type()
         encoding = 'NA' if isinstance(msg, str) else msg.get('Content-Transfer-Encoding', 'NA')
-        if 'text/plain' in content_type:
+        if 'text/plain' in content_type or 'text/html' in content_type:
             msg_text = msg.get_payload()
             if('base64' in encoding):
                 msg_text = base64.b64decode(msg_text)
@@ -105,7 +105,7 @@ def parse_title(subject):
     return False, False
 
 def process(id, content):
-    subnet, admin_mail, admin_line, mail_no, line_no = getSubnet(ip)
+    subnet, to_mail, to_line, mail_no, line_no = getSubnet(ip)
     title = "[NEW]-("+str(ip)+")"+str(subject)
     
     if(subnet):
@@ -117,14 +117,12 @@ def process(id, content):
             admin_info = admin_info.split(';')
             admin_name = admin_info[0]
             admin_mail = admin_info[1].rstrip()
-            print(admin_mail)
             from_user = admin_mail
             content = header+"<br>"+content
-            to_user=[admin_mail]
+            to_user=[to_mail]
         else:
-            print(admin_mail)
             from_user = "soc@tyrcmp.tyc.edu.tw"
-            to_user = [admin_mail]
+            to_user = [to_mail]
         if(test==True):
             content = admin_mail+"<br>"+content
             to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
@@ -134,7 +132,7 @@ def process(id, content):
             send_mail(content, to_user, from_user, title)
         if(line_no=="1"):
             print("sending line...")
-            send_line(title, admin_line)
+            send_line(title, to_line)
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')

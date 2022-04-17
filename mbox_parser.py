@@ -11,6 +11,7 @@ import os
 import argparse
 from connectDB import *
 from sender import *
+from email.utils import formataddr
 
 test=True
 parser = argparse.ArgumentParser()
@@ -109,37 +110,44 @@ def parse_title(subject):
     return False, False
 
 def process(table, ip, id, date, content):
-    data, admin_mail, admin_line, mail_no, line_no = insert2table(table, ip, id, date, content)
+    data, to_mail, to_line, mail_no, line_no = insert2table(table, ip, id, date, content)
     #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
     title = "[NEW]-("+str(ip)+")"+str(subject)
     
     if(data):
+
+        f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
+        header = f.read()
+        f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
+        admin_info = f.read()
+        admin_info = admin_info.split(';')
+        
         if(data=='140.115.0.0/16'):
-            f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
-            header = f.read()
-            f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
-            admin_info = f.read()
-            admin_info = admin_info.split(';')
             admin_name = admin_info[0]
             admin_mail = admin_info[1].rstrip()
-            print(admin_mail)
-            from_user = admin_mail
             content = header+"<br>"+content
-            to_user=[admin_mail]
-        else:
-            print(admin_mail)
-            from_user = "soc@tyrcmp.tyc.edu.tw"
-            to_user = [admin_mail]
+        else: 
+            admin_name = admin_info[2]
+            admin_mail = admin_info[3].rstrip()
+            #from_user = "soc@tyrcmp.tyc.edu.tw" 
+
+        from_user = formataddr((admin_name, admin_mail))
+        to_user=[]
+        to_mail = to_mail.split(',')
+        for user in to_mail:
+            to_user.append(user)
+        to_user.append("tyrc@ncu.edu.tw")
+        print(to_user)
         if(test==True):
-            content = admin_mail+"<br>"+content
-            to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
+            content = str(to_mail)+"<br>"+content
+            to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw', ' tyrc@ncu.edu.tw']
         print("mail no:", mail_no, " line no:", line_no)
         if(mail_no=="1"):
             print("sending mail...")
             send_mail(content, to_user, from_user, title)
         if(line_no=="1"):
             print("sneding line...")
-            send_line(title, admin_line)
+            send_line(title, to_line)
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')

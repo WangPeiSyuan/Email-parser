@@ -1,10 +1,14 @@
-# -*- coding: utf-8 -*-
+# !/usr/bin/python3
+# coding: utf-8
 import mailbox
 import base64
 import parse
 import bs4
 from email.header import decode_header, make_header
 import re
+import MySQLdb
+from connectDB import *
+
 
 def get_html_text(html):
     try:
@@ -63,35 +67,36 @@ class GmailMboxMessage():
                 msg_text = get_html_text(msg)
         return (msg_text)
 
-'''
-def parse_title(subject, table):
-    if(table=='soc'):
-        soc = re.search('事件單', subject)
-        if(soc):
-            print(subject)
-    elif(table=='ewa'): 
-        ewa = re.search('預警情報', subject)
-        if(ewa):
-            print(subject) 
-'''
 def parse_ip(content):
     title = re.search('<td>事件主旨</td>.*<td>事件描述</td>', content)
     if(title): 
         ## parse ip
         ip = re.search( r'[0-9]+(?:\.[0-9]+){3}', title.group(0))
-        #return ip 
-
         if(ip):
             ## parse date      
             date = re.search("原發布時間</td><td width='380'>.*</td></tr><tr><td>事件類型</td>", content) 
             soup = bs4.BeautifulSoup(date.group(0),'html.parser')
             text = soup.get_text()
             date = re.sub('[\u4e00-\u9fa5]','',text)
-            #print("發布時間:", date)
-            
             return ip.group(0), date
+            
+    return False, False
+def parse_title(subject):
+    
+    soc = re.search('事件單', subject)
+    ewa = re.search('預警情報', subject)
+    if(soc):
+        soc_id = re.search("(事件單編號:.*)", subject)
+        soc_id = re.findall('[a-zA-Z0-9\-]', soc_id.group(0))
+        soc_id = ''.join(soc_id)
+        return "soc", soc_id
+    elif(ewa): 
+        ewa_id = re.search("(發布編號:.*)", subject)
+        ewa_id = re.findall('[a-zA-Z0-9\-]', ewa_id.group(0))
+        ewa_id = ''.join(ewa_id)
+        return "ewa", ewa_id
+    return False, False
 
-    return  False, False
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')
@@ -102,5 +107,13 @@ if __name__ == '__main__':
         content, subject = email_data.parse_email()
         ip, date = parse_ip(str(content))
         if(ip):
-            print(str(subject)," ", date)
+            table, id = parse_title(str(subject)) #soc/ewa
+        if(ip and table):
+            if(checkID(table, id)):
+                print(id, id, "一致")
+            else:
+                print(id, "NULL", "不一致")
+    print("done")
+                
+                        
 

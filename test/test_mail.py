@@ -5,6 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.utils import formataddr
+import MySQLdb
 
 def mail_function(msg, to_user, from_user, title):
     message = MIMEMultipart()
@@ -20,6 +21,13 @@ def mail_function(msg, to_user, from_user, title):
     server.sendmail(from_user,to_user,message.as_string())
     server.quit()
     
+db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+cursor = db.cursor()
+sql = "select * from school_net where network_name='test';"
+cursor.execute(sql)
+for row in cursor:
+    mail_to=row[5]
+
 f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
 content = f.read()
 f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
@@ -28,10 +36,15 @@ admin_info = admin_info.split(';')
 admin_name = admin_info[0]
 admin_mail = admin_info[1].rstrip()
 to_user = ['peistu13333@g.ncu.edu.tw','110522127@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw']
-#from_user = "From: "+ admin_name+"<"+admin_mail+">"
+print(to_user)
+to_user = mail_to.split(',')
+to_list=[]
+for user in to_user:
+    to_list.append(str(user))
+to_list.append("tyrc@ncu.edu.tw")
+print(to_list)
+content = ''.join(to_list)+"<br>"+content
 from_user = formataddr((admin_name, admin_mail))
-#now = time.ctime()
-#cmd = "LANG=ZH_TW.big5 && echo '"+content+"\n"+now+"' | mail -s 'mail test' -a 'From: "+admin_name+"<"+admin_mail+">' 110522127@cc.ncu.edu.tw, peistu13333@g.ncu.edu.tw"
-mail_function(content, to_user, from_user, "mail test")
-#os.system(cmd)
-#print(cmd)
+
+mail_function(content, to_list
+        , from_user, "mail test")

@@ -66,7 +66,8 @@ def insert2table(table, ip, id, date, content):
 
 def checkID(table, id):
     
-    print("check table: ", table)
+    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    cursor = db.cursor()
     if(table=="soc"):
         sql = "select * from soc where soc_id = '"+id+"';"
     elif(table=="ewa"):
