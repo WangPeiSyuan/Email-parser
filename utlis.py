@@ -13,6 +13,8 @@ from connectDB import *
 from sender import *
 from email.utils import formataddr
 
+test=True 
+
 def get_html_text(html):
     try:
         return bs4.BeautifulSoup(html, 'lxml').body.get_text(' ', strip=True)
@@ -33,7 +35,7 @@ class GmailMboxMessage():
         email_subject = self.email_data['Subject']
         email_subject = make_header(decode_header(email_subject))
         email_text = self.read_email_payload() 
-        return email_text, email_subject 
+        return str(email_text), str(email_subject) 
     def read_email_payload(self):
         email_payload = self.email_data.get_payload()
         if self.email_data.is_multipart():
@@ -56,7 +58,6 @@ class GmailMboxMessage():
     def _read_email_text(self, msg):
         content_type = 'NA' if isinstance(msg, str) else msg.get_content_type()
         encoding = 'NA' if isinstance(msg, str) else msg.get('Content-Transfer-Encoding', 'NA')
-        print(content_type)
         if 'text/plain' in content_type or 'text/html' in content_type:
             msg_text = msg.get_payload()
             if('base64' in encoding):
@@ -104,8 +105,11 @@ def parse_title(subject):
         return "ewa", ewa_id
     return False, False
 
-def process(table, ip, id, date, content):
-    data, to_mail, to_line, mail_no, line_no = insert2table(table, ip, id, date, content)
+def process(table, ip, id, date, subject, content, insert):
+    if(insert==True):
+        data, to_mail, to_line, mail_no, line_no = insert2table(table, ip, id, date, content)
+    else:
+        data, to_mail, to_line, mail_no, line_no = getSubnet(ip)
     #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
     title = "[NEW]-("+str(ip)+")"+str(subject)
     
