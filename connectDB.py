@@ -8,21 +8,39 @@ def isSubnet(ip, subnet):
     except:
         return False
 
+def smallest_domain(subnet_list):
+    mask=[]
+    mask=[subnet[1].split('/')[1] for subnet in subnet_list]
+    max_value = max(mask)
+    index = mask.index(max_value)
+    #print(subnet_list[index])
+    return subnet_list[index]    
+
 def getSubnet(ip):
-    
+  
     db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
     cursor = db.cursor()
     sql = "select * from school_net;"
     cursor.execute(sql)
+    subnet_list=[]
     for row in cursor:
         subnet = row[1]
         if(isSubnet(ip, subnet)):
-            admin_mail = row[5]
-            admin_line = row[3]
-            mail_notify = row[6]
-            line_notify = row[7]
-            return subnet, admin_mail, admin_line, mail_notify, line_notify
-    return False, False, False, False, False
+            print(row)
+            subnet_list.append(row)    
+    if(len(subnet_list)==0):
+        return False, False, False, False, False
+    elif(len(subnet_list)==1):
+        row=subnet_list[0]
+    else: #multiple mask fit in ip need to find the smallest domain
+        row = smallest_domain(subnet_list)        
+    subnet = row[1]
+    admin_mail = row[5]
+    admin_line = row[3]
+    mail_notify = row[6]
+    line_notify = row[7]
+    
+    return subnet, admin_mail, admin_line, mail_notify, line_notify
 
 def insert2table(table, ip, id, date, content):
     
@@ -78,3 +96,17 @@ def checkID(table, id):
     else:
         return True
      
+def verifyID(table, id):
+    
+    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    cursor = db.cursor()
+    if(table=="soc"):
+        sql = "update soc set verify='1' where soc_id = '"+id+"';"
+    elif(table=="ewa"):
+        sql = "update ewa set verify='1' where ewa_id = '"+id+"';"
+     
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+ip = '120.124.30.82'
+getSubnet(ip)

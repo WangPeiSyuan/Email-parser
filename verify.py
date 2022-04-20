@@ -2,7 +2,7 @@
 # coding: utf-8
 import mailbox
 from utlis import *
-from connectDB import checkID
+from connectDB import checkID, verifyID
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/verify')
@@ -18,4 +18,4 @@ if __name__ == '__main__':
             table, id = parse_title(str(subject)) #soc/ewa
         if(ip and table):
             if(checkID(table, id)):
-                print("OK!")
+                verifyID(table, id)

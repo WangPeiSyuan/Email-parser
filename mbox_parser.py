@@ -26,9 +26,9 @@ if __name__ == '__main__':
             insert=True
             if(opt.check):
                 if(checkID(table, id)==False): #before cleaning mailbox, check if DB has the mail, if not insert it
-                    process(table, ip, id, date, subject, content)
+                    process(table, ip, id, date, subject, content, insert)
                 else:
                     print("ok")
             else:  
-                process(table, ip, id, date, subject, content)
+                process(table, ip, id, date, subject, content, insert)
 
