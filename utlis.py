@@ -13,7 +13,7 @@ from connectDB import *
 from sender import *
 from email.utils import formataddr
 
-test=True 
+DEBUG=True 
 
 def get_html_text(html):
     try:
@@ -128,18 +128,18 @@ def process(table, ip, id, date, subject, content, insert):
         else: 
             admin_name = admin_info[2]
             admin_mail = admin_info[3].rstrip()
-            #from_user = "soc@tyrcmp.tyc.edu.tw" 
 
         from_user = formataddr((admin_name, admin_mail))
         to_user=[]
+        to_mail=''.join(to_mail.split())
         to_mail = to_mail.split(',')
         for user in to_mail:
             to_user.append(user)
         to_user.append("tyrc@ncu.edu.tw")
         print(to_user)
-        if(test==True):
+        if(DEBUG==True):
             content = str(to_mail)+"<br>"+content
-            to_user = ['peistu13333@g.ncu.edu.tw', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw', ' tyrc@ncu.edu.tw']
+            to_user = ['peiswang824@gmail.com', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw', ' tyrc@ncu.edu.tw']
         print("mail no:", mail_no, " line no:", line_no)
         if(mail_no=="1"):
             print("sending mail...")

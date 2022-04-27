@@ -4,8 +4,8 @@ import mailbox
 import argparse
 from utlis import *
 
-test=True
-parser = argparse.ArgumentParser()
+DEBUG=True
+parser= argparse.ArgumentParser()
 parser.add_argument('--check', help='check before cleaning mailbox')
 opt = parser.parse_args()
 

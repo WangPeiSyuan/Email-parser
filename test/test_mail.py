@@ -35,13 +35,14 @@ admin_info = f.read()
 admin_info = admin_info.split(';')
 admin_name = admin_info[0]
 admin_mail = admin_info[1].rstrip()
-to_user = ['peistu13333@g.ncu.edu.tw','110522127@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw']
-print(to_user)
-to_user = mail_to.split(',')
+#to_user = ['peistu13333@g.ncu.edu.tw','110522127@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw']
+#print(to_user)
+to_user="peistu13333@g.ncu.edu.tw,"
+to_user = to_user.split(',')
 to_list=[]
 for user in to_user:
     to_list.append(str(user))
-to_list.append("tyrc@ncu.edu.tw")
+#to_list.append("tyrc@ncu.edu.tw")
 print(to_list)
 content = ''.join(to_list)+"<br>"+content
 from_user = formataddr((admin_name, admin_mail))

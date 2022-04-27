@@ -26,20 +26,21 @@ def getSubnet(ip):
     for row in cursor:
         subnet = row[1]
         if(isSubnet(ip, subnet)):
-            print(row)
-            subnet_list.append(row)    
+            subnet_list.append(row) 
+ #   print(subnet_list)
     if(len(subnet_list)==0):
         return False, False, False, False, False
     elif(len(subnet_list)==1):
         row=subnet_list[0]
     else: #multiple mask fit in ip need to find the smallest domain
         row = smallest_domain(subnet_list)        
+    print(row)
     subnet = row[1]
     admin_mail = row[5]
     admin_line = row[3]
     mail_notify = row[6]
     line_notify = row[7]
-    
+    admin_mail = ''.join(admin_mail.split()) 
     return subnet, admin_mail, admin_line, mail_notify, line_notify
 
 def insert2table(table, ip, id, date, content):
@@ -60,21 +61,36 @@ def insert2table(table, ip, id, date, content):
         print("inserting:", id)
         sql = "select * from school_net;"
         cursor.execute(sql)
+
+        subnet_list=[]
         for row in cursor:
             subnet = row[1]
             if(isSubnet(ip, subnet)):
-                if(table=="soc"):
-                    sql = "update soc set soc_school='"+row[0]+"' where soc_id = '"+id+"';"
-                elif(table=="ewa"):
-                    sql = "update ewa set ewa_school='"+row[0]+"' where ewa_id = '"+id+"';"
-                cursor.execute(sql)
-                db.commit()
-                
-                admin_mail = row[5]
-                admin_line = row[3]
-                mail_notify = row[6]
-                line_notify = row[7]
-                return subnet, admin_mail, admin_line, mail_notify, line_notify
+                subnet_list.append(row) 
+ #   print(subnet_list)
+        if(len(subnet_list)==0):
+            return False, False, False, False, False
+        elif(len(subnet_list)==1):
+            row=subnet_list[0]
+        else: #multiple mask fit in ip need to find the smallest domain
+            row = smallest_domain(subnet_list)        
+        print(row)
+        
+        if(table=="soc"):
+            sql = "update soc set soc_school='"+row[0]+"' where soc_id = '"+id+"';"
+        elif(table=="ewa"):
+            sql = "update ewa set ewa_school='"+row[0]+"' where ewa_id = '"+id+"';"
+        cursor.execute(sql)
+        db.commit()
+        
+        subnet = row[1]
+        admin_mail = row[5]
+        admin_line = row[3]
+        mail_notify = row[6]
+        line_notify = row[7]
+        admin_mail = ''.join(admin_mail.split())  
+        return subnet, admin_mail, admin_line, mail_notify, line_notify
+    
     except:
         db.close()
         print(id, " already inserted!")
@@ -108,5 +124,5 @@ def verifyID(table, id):
     cursor.execute(sql)
     db.commit()
     db.close()
-ip = '120.124.30.82'
-getSubnet(ip)
+#ip = '140.115.52.114'
+#getSubnet(ip)
