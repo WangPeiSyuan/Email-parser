@@ -83,7 +83,7 @@ def parse_ip(content):
             soup = bs4.BeautifulSoup(date.group(0),'html.parser')
             text = soup.get_text()
             date = re.sub('[\u4e00-\u9fa5]','',text)
-            print("發布時間:", date)
+            #print("發布時間:", date)
             return ip.group(0), date
             
     return False, False
@@ -95,13 +95,13 @@ def parse_title(subject):
         soc_id = re.search("(事件單編號:.*)", subject)
         soc_id = re.findall('[a-zA-Z0-9\-]', soc_id.group(0))
         soc_id = ''.join(soc_id)
-        print("發布編號:", soc_id)
+        #print("發布編號:", soc_id)
         return "soc", soc_id
     elif(ewa): 
         ewa_id = re.search("(發布編號:.*)", subject)
         ewa_id = re.findall('[a-zA-Z0-9\-]', ewa_id.group(0))
         ewa_id = ''.join(ewa_id)
-        print("發布編號:", ''.join(ewa_id))
+        #print("發布編號:", ''.join(ewa_id))
         return "ewa", ewa_id
     return False, False
 
@@ -111,7 +111,7 @@ def process(table, ip, id, date, subject, content, insert):
     else:
         data, to_mail, to_line, mail_no, line_no = getSubnet(ip)
     #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
-    title = "[NEW]-("+str(ip)+")"+str(subject)
+    title = "[NEW]-教育機構資安通報-("+str(ip)+")"+str(subject)
     
     if(data):
 
@@ -121,24 +121,30 @@ def process(table, ip, id, date, subject, content, insert):
         admin_info = f.read()
         admin_info = admin_info.split(';')
         
-        if(data=='140.115.0.0/16'):
-            admin_name = admin_info[0]
-            admin_mail = admin_info[1].rstrip()
-            content = header+"<br>"+content
-        else: 
-            admin_name = admin_info[2]
-            admin_mail = admin_info[3].rstrip()
-
-        from_user = formataddr((admin_name, admin_mail))
         to_user=[]
         to_mail=''.join(to_mail.split())
         to_mail = to_mail.split(',')
         for user in to_mail:
             to_user.append(user)
         to_user.append("tyrc@ncu.edu.tw")
-        print(to_user)
+        
+        to_chat=[]
+        to_line=''.join(to_line.split())
+        to_line = to_line.split(',')
+        for chat in to_line:
+            to_chat.append(chat)
+        if('140.115' in data):
+            admin_name = admin_info[0]
+            admin_mail = admin_info[1].rstrip()
+            content = header+"<br>"+content
+            to_user = to_user + ['center2@cc.ncu.edu.tw', 'center25@cc.ncu.edu.tw','center24@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw']
+        else: 
+            admin_name = admin_info[2]
+            admin_mail = admin_info[3].rstrip()
+
+        from_user = formataddr((admin_name, admin_mail))
         if(DEBUG==True):
-            content = str(to_mail)+"<br>"+content
+            content = str(to_user)+"<br>"+content
             to_user = ['peiswang824@gmail.com', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw', ' tyrc@ncu.edu.tw']
         print("mail no:", mail_no, " line no:", line_no)
         if(mail_no=="1"):
@@ -146,5 +152,5 @@ def process(table, ip, id, date, subject, content, insert):
             send_mail(content, to_user, from_user, title)
         if(line_no=="1"):
             print("sneding line...")
-            send_line(title, to_line)
+            send_line(title, to_chat)
 

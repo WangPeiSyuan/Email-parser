@@ -14,14 +14,14 @@ def check():
     result = cursor.fetchall()
     print("soc:")
     for row in result:
-        print(row[0], row[3], row[5])
+        print(row[0], row[3], row[6])
 
     sql = "select * from ewa where create_date >= '"+day+"' order by create_date desc;"
     cursor.execute(sql)
     result = cursor.fetchall()
     print("ewa:")
     for row in result:
-        print(row[0], row[3], row[5])
+        print(row[0], row[3], row[6])
 
 if __name__ == '__main__':
     check()

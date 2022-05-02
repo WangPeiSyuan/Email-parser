@@ -110,7 +110,7 @@ def checkID(table, id):
     if(cursor.rowcount==0):
         return False
     else:
-        return True
+        return cursor.fetchone()[0]
      
 def verifyID(table, id):
     
@@ -124,5 +124,3 @@ def verifyID(table, id):
     cursor.execute(sql)
     db.commit()
     db.close()
-#ip = '140.115.52.114'
-#getSubnet(ip)

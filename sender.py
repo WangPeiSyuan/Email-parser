@@ -19,13 +19,13 @@ def send_mail(msg, to_user, from_user, title):
     server.sendmail(from_user,to_user,message.as_string())
     server.quit()
 
-def send_line(msg, token):
+def send_line(msg, tokens):
     #token = 'W4elJYcjhNG6oNypWwMR2r4rS8APoHv8ih5jtcuV5P1'
+    for token in tokens:
+        headers = {
+            "Authorization": "Bearer " + token,
+            "Content-Type" : "application/x-www-form-urlencoded"
+        }
 
-    headers = {
-        "Authorization": "Bearer " + token,
-        "Content-Type" : "application/x-www-form-urlencoded"
-    }
-
-    payload = {'message': msg}
-    r = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
+        payload = {'message': msg}
+        r = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
