@@ -14,6 +14,7 @@ from sender import *
 from email.utils import formataddr
 
 DEBUG=True 
+SEND_EWA_FLAG=False
 
 def get_html_text(html):
     try:
@@ -107,12 +108,13 @@ def parse_title(subject):
 
 def process(table, ip, id, date, subject, content, insert):
     if(insert==True):
-        data, to_mail, to_line, mail_no, line_no = insert2table(table, ip, id, date, content)
+        data, to_mail, to_line, mail_no, line_no, network_name = insert2table(table, ip, id, date, content)
     else:
-        data, to_mail, to_line, mail_no, line_no = getSubnet(ip)
-    #to_user="peistu13333@g.ncu.edu.tw, 110522127@cc.ncu.edu.tw"
-    title = "[NEW]-教育機構資安通報-("+str(ip)+")"+str(subject)
+        data, to_mail, to_line, mail_no, line_no, network_name = getSubnet(ip)
+    title = "[NEW]-教育機構資安通報-("+str(network_name)+str(ip)+")"+str(subject)
     
+    if(table=="ewa" and SEND_EWA_FLAG==False):
+        return False
     if(data):
 
         f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
@@ -153,4 +155,6 @@ def process(table, ip, id, date, subject, content, insert):
         if(line_no=="1"):
             print("sneding line...")
             send_line(title, to_chat)
+        
+        return True
 

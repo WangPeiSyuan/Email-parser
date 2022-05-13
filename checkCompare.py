@@ -15,11 +15,11 @@ if __name__ == '__main__':
         if(ip):
             table, id = parse_title(str(subject)) #soc/ewa
         if(ip and table):
-            DB_id = checkID(table, id)
-            if(DB_id):
-                print("Mbox:{} DB:{} 一致".format(id, DB_id))
+            DB_data = checkID(table, id)
+            if(DB_data):
+                print("Mbox:{} DB:{} 一致".format(id, DB_data[0]))
             else: 
-                print("Mbox:{} DB:{} 不一致".format(id, DB_id))
+                print("Mbox:{} DB:{} 不一致".format(id, DB_data[0]))
     print("done")
                 
                         

@@ -34,14 +34,15 @@ def getSubnet(ip):
         row=subnet_list[0]
     else: #multiple mask fit in ip need to find the smallest domain
         row = smallest_domain(subnet_list)        
-    print(row)
+    
+    network_name = row[0]
     subnet = row[1]
     admin_mail = row[5]
     admin_line = row[3]
     mail_notify = row[6]
     line_notify = row[7]
     admin_mail = ''.join(admin_mail.split()) 
-    return subnet, admin_mail, admin_line, mail_notify, line_notify
+    return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name[0]
 
 def insert2table(table, ip, id, date, content):
     
@@ -58,22 +59,7 @@ def insert2table(table, ip, id, date, content):
         db.commit()
     
         #find subnet admin
-        print("inserting:", id)
-        sql = "select * from school_net;"
-        cursor.execute(sql)
-
-        subnet_list=[]
-        for row in cursor:
-            subnet = row[1]
-            if(isSubnet(ip, subnet)):
-                subnet_list.append(row) 
- #   print(subnet_list)
-        if(len(subnet_list)==0):
-            return False, False, False, False, False
-        elif(len(subnet_list)==1):
-            row=subnet_list[0]
-        else: #multiple mask fit in ip need to find the smallest domain
-            row = smallest_domain(subnet_list)        
+        row = smallest_domain(subnet_list)        
         print(row)
         
         if(table=="soc"):
@@ -83,18 +69,19 @@ def insert2table(table, ip, id, date, content):
         cursor.execute(sql)
         db.commit()
         
+        network_name = row[0]
         subnet = row[1]
         admin_mail = row[5]
         admin_line = row[3]
         mail_notify = row[6]
         line_notify = row[7]
         admin_mail = ''.join(admin_mail.split())  
-        return subnet, admin_mail, admin_line, mail_notify, line_notify
+        return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name
     
     except:
         db.close()
         print(id, " already inserted!")
-        return False, False, False, False, False
+        return False, False, False, False, False, False
 
     
 
@@ -110,7 +97,7 @@ def checkID(table, id):
     if(cursor.rowcount==0):
         return False
     else:
-        return cursor.fetchone()[0]
+        return cursor.fetchone()
      
 def verifyID(table, id):
     
