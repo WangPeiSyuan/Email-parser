@@ -11,7 +11,8 @@ import os
 import argparse
 from connectDB import *
 from sender import *
-from email.utils import formataddr
+from email.utils import formataddr, parsedate
+import time
 
 DEBUG=True 
 SEND_EWA_FLAG=False
@@ -35,8 +36,20 @@ class GmailMboxMessage():
         email_to = self.email_data['To']
         email_subject = self.email_data['Subject']
         email_subject = make_header(decode_header(email_subject))
-        email_text = self.read_email_payload() 
+        email_text = self.read_email_payload()
+        
         return str(email_text), str(email_subject) 
+    
+    def get_transit_time(self):
+        email_date = self.email_data['Date']
+        email_received = self.email_data['Received']
+        received_t = parsedate(email_received.split(';')[1][1:])
+        sent_t = parsedate(email_date)
+        received_t = time.mktime(received_t)
+        sent_t = time.mktime(sent_t)
+        transit = received_t - sent_t
+        return int(transit)
+    
     def read_email_payload(self):
         email_payload = self.email_data.get_payload()
         if self.email_data.is_multipart():

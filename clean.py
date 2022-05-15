@@ -25,11 +25,12 @@ if __name__ == '__main__':
             if(result==False): #before cleaning mailbox, check if DB has the mail, if not insert it
                 insert=True
                 process(table, ip, id, date, subject, content, insert)
-            else:
-                result_date = result[7]
-                if(result_date<date7):
-                    print("Deleting "+ subject, " ", result_date)
-                    last=idx
+            
+            result = checkID(table, id)
+            result_date = result[7]
+            if(result_date<date7):
+                print("Deleting "+ subject, " ", result_date)
+                last=idx
 
     for i in range(last+1):
         mbox_obj.remove(i)

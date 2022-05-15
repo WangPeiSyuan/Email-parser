@@ -99,15 +99,16 @@ def checkID(table, id):
     else:
         return cursor.fetchone()
      
-def verifyID(table, id):
+def verifyID(table, id, transit):
     
     db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
     cursor = db.cursor()
     if(table=="soc"):
-        sql = "update soc set verify='1' where soc_id = '"+id+"';"
+        sql = "update soc set verify = %s, verify_time = %s where soc_id = '"+id+"';"
     elif(table=="ewa"):
-        sql = "update ewa set verify='1' where ewa_id = '"+id+"';"
-     
-    cursor.execute(sql)
+        sql = "update ewa set verify = %s, verify_time = %s where ewa_id = '"+id+"';"
+
+    values=('1', int(transit))
+    cursor.execute(sql, values)
     db.commit()
     db.close()

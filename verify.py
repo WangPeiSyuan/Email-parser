@@ -12,10 +12,12 @@ if __name__ == '__main__':
         print('##########parsing email {0} of {1}##############'.format(idx, num_entries))
         email_data = GmailMboxMessage(email_obj)
         content, subject = email_data.parse_email()
-        print(subject)
+        
         ip, date = parse_ip(str(content))
         if(ip):
             table, id = parse_title(str(subject)) #soc/ewa
         if(ip and table):
             if(checkID(table, id)):
-                verifyID(table, id)
+                transit_t = email_data.get_transit_time()
+                print("transit time:", transit_t)
+                verifyID(table, id, transit_t)
