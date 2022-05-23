@@ -15,7 +15,7 @@ from email.utils import formataddr, parsedate
 import time
 
 DEBUG=True 
-SEND_EWA_FLAG=False
+SEND_EWA_FLAG=True
 
 def get_html_text(html):
     try:
@@ -127,6 +127,7 @@ def process(table, ip, id, date, subject, content, insert):
     title = "[NEW]-教育機構資安通報-("+str(network_name)+str(ip)+")"+str(subject)
     
     if(table=="ewa" and SEND_EWA_FLAG==False):
+        print("SEND_EWA_FLAG=False")
         return False
     if(data):
 
