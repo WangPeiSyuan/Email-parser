@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import mailbox
-from utlis import *
+from utils import *
 
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')

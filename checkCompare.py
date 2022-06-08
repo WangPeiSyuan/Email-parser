@@ -1,7 +1,7 @@
 # !/usr/bin/python3
 # coding: utf-8
 import mailbox
-from utlis import *
+from utils import *
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 # !/usr/bin/python3
 # coding: utf-8
 import mailbox
-from utlis import *
+from utils import *
 from connectDB import checkID, verifyID
 
 if __name__ == '__main__':

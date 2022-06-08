@@ -2,7 +2,7 @@
 # coding: utf-8
 import mailbox
 import argparse
-from utlis import *
+from utils import *
 
 
 if __name__ == '__main__':

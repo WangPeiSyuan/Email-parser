@@ -2,7 +2,7 @@
 # coding: utf-8
 import mailbox
 import argparse
-from utlis import *
+from utils import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--id', help='id for soc_id/ewa_id', required=True)
