@@ -35,7 +35,11 @@ class GmailMboxMessage():
         email_from = self.email_data['From']
         email_to = self.email_data['To']
         email_subject = self.email_data['Subject']
-        email_subject = make_header(decode_header(email_subject))
+        try:
+            email_subject = make_header(decode_header(email_subject))
+        except:
+            pass
+           # print("email subject:", email_subject)
         email_text = self.read_email_payload()
         
         return str(email_text), str(email_subject) 

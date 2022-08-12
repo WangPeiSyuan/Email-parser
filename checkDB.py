@@ -7,7 +7,7 @@ def check():
     db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
     cursor = db.cursor()
     today = datetime.datetime.today()
-    deldays = datetime.timedelta(days=7)
+    deldays = datetime.timedelta(days=14)
     day = str(today-deldays)
     sql = "select * from soc where create_date >= '"+day+"' order by create_date desc;"
     cursor.execute(sql)
