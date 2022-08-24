@@ -2,7 +2,12 @@ import MySQLdb
 import pandas as pd
 
 ## get data from sysmgrdb and preprocess 
-db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "sysmgrdb", charset="utf8")
+HOST="140.115.17.196"
+DATABASE="sysmgrdb"
+USER="tyrc_ncu"
+PASSWORD="Merry34!"
+
+db = MySQLdb.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
 cursor = db.cursor()
 sql = "select name,email,phone,faculty.did,ip_range from faculty join dept on faculty.did=dept.did where faculty.did<>'cc';"
 cursor.execute(sql)
