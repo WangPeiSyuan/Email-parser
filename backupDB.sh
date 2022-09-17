@@ -1,3 +1,4 @@
+#!/bim/bash
 DATE="`date +\%Y\%m\%d`"
 SQLFILE=/var/log/mysql/backup/school_net_${DATE}.sql
 DATABASE=tyrcDB
@@ -6,3 +7,5 @@ USER=root
 PASSWORD=Tyrcncu0930!
 
 mysqldump -u ${USER} -p${PASSWORD} ${DATABASE} ${TABLE}> ${SQLFILE}
+
+python3 /var/www/soc/updateDB.py

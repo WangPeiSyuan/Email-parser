@@ -133,13 +133,14 @@ def process(table, ip, id, date, subject, content, insert):
     if(table=="ewa" and SEND_EWA_FLAG==False):
         print("SEND_EWA_FLAG=False")
         return False
+
+    f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
+    header = f.read()
+    f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
+    admin_info = f.read()
+    admin_info = admin_info.split(';')
     if(data):
 
-        f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
-        header = f.read()
-        f = open('/var/www/soc/ncu_admin/admin_info.txt','r')
-        admin_info = f.read()
-        admin_info = admin_info.split(';')
         
         to_user=[]
         to_mail=''.join(to_mail.split())
@@ -175,4 +176,11 @@ def process(table, ip, id, date, subject, content, insert):
             send_line(title, to_chat)
         
         return True
+    else:
+        admin_name = admin_info[2]
+        admin_mail = admin_info[3].rstrip()
+        from_user = formataddr((admin_name, admin_mail))
+        title = "[NEW]-教育機構資安通報-(請補正school net欄位"+str(ip)+")"+str(subject)
+        to_user = ['peiswang824@gmail.com', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
+        send_mail(content, to_user, ifrom_user, title)
 
