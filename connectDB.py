@@ -68,13 +68,13 @@ def insert2table(table, ip, id, date, content):
                 subnet_list.append(row) 
                 #   print(subnet_list)
         if(len(subnet_list)==0):
-            return False, False, False, False, False
+            return False, False, False, False, False, "none"
         elif(len(subnet_list)==1):
             row=subnet_list[0]
         else: #multiple mask fit in ip need to find the smallest domain
             row = smallest_domain(subnet_list)        
     #    print(row)
-        
+        if(row): 
         if(table=="soc"):
             sql = "update soc set soc_school='"+row[0]+"' where soc_id = '"+id+"';"
         elif(table=="ewa"):

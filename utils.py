@@ -176,11 +176,11 @@ def process(table, ip, id, date, subject, content, insert):
             send_line(title, to_chat)
         
         return True
-    else:
+    elif(network_name=="none"):
         admin_name = admin_info[2]
         admin_mail = admin_info[3].rstrip()
         from_user = formataddr((admin_name, admin_mail))
         title = "[NEW]-教育機構資安通報-(請補正school net欄位"+str(ip)+")"+str(subject)
         to_user = ['peiswang824@gmail.com', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw']
-        send_mail(content, to_user, ifrom_user, title)
+        send_mail(content, to_user, from_user, title)
 
