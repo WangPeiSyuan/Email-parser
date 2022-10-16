@@ -16,11 +16,11 @@ if __name__ == '__main__':
     for idx, email_obj in enumerate(mbox_obj):
         email_data = GmailMboxMessage(email_obj)
         content, subject = email_data.parse_email()
-        ip, date = parse_ip(str(content))
+        ip, date, event_type  = parse_ip(str(content))
         if(ip):
             table, id = parse_title(str(subject)) #soc/ewa
         if(id == opt.id):  
             insert = False
-            process(table, ip, id, date, subject, content, insert)
+            process(table, ip, id, date, event_type, subject, content, insert)
             break
 

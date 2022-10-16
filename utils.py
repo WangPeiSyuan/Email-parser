@@ -101,10 +101,15 @@ def parse_ip(content):
             soup = bs4.BeautifulSoup(date.group(0),'html.parser')
             text = soup.get_text()
             date = re.sub('[\u4e00-\u9fa5]','',text)
-            #print("發布時間:", date)
-            return ip.group(0), date
+            ## parse event type
+            event_type = re.search("事件類型</td>.*原發現時間", content).group(0)
+            event_type = re.search("<td>.*</td>",event_type).group(0)
+            soup = bs4.BeautifulSoup(event_type,'html.parser')
+            event_type = soup.get_text()
             
-    return False, False
+            return ip.group(0), date, event_type
+            
+    return False, False, False
 def parse_title(subject):
     
     soc = re.search('事件單', subject)
@@ -123,9 +128,9 @@ def parse_title(subject):
         return "ewa", ewa_id
     return False, False
 
-def process(table, ip, id, date, subject, content, insert):
+def process(table, ip, id, date, event_type, subject, content, insert):
     if(insert==True):
-        data, to_mail, to_line, mail_no, line_no, network_name = insert2table(table, ip, id, date, content)
+        data, to_mail, to_line, mail_no, line_no, network_name = insert2table(table, ip, id, date, event_type, content)
     else:
         data, to_mail, to_line, mail_no, line_no, network_name = getSubnet(ip)
     title = "[NEW]-教育機構資安通報-("+str(network_name)+str(ip)+")"+str(subject)

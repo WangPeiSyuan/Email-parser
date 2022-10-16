@@ -44,16 +44,16 @@ def getSubnet(ip):
     admin_mail = ''.join(admin_mail.split()) 
     return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name[0]
 
-def insert2table(table, ip, id, date, content):
+def insert2table(table, ip, id, date, event_type, content):
     
     db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
     cursor = db.cursor()
     if(table=="soc"):
         #insert into soc
-        sql = "insert into soc (soc_id, soc_ip, soc_date, soc_content) VALUES (%s, %s, %s, %s);"
+        sql = "insert into soc (soc_id, soc_ip, soc_date, event_type, soc_content) VALUES (%s, %s, %s, %s, %s);"
     elif(table=="ewa"):
-        sql = "insert into ewa (ewa_id, ewa_ip, ewa_date, ewa_content) VALUES (%s, %s, %s, %s);"
-    values = (id, ip, date, content)
+        sql = "insert into ewa (ewa_id, ewa_ip, ewa_date, event_type, ewa_content) VALUES (%s, %s, %s, %s, %s);"
+    values = (id, ip, date, event_type, content)
     try:
         cursor.execute(sql, values)
         db.commit()
@@ -72,9 +72,7 @@ def insert2table(table, ip, id, date, content):
         elif(len(subnet_list)==1):
             row=subnet_list[0]
         else: #multiple mask fit in ip need to find the smallest domain
-            row = smallest_domain(subnet_list)        
-    #    print(row)
-        if(row): 
+            row = smallest_domain(subnet_list)         
         if(table=="soc"):
             sql = "update soc set soc_school='"+row[0]+"' where soc_id = '"+id+"';"
         elif(table=="ewa"):

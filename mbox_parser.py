@@ -14,11 +14,11 @@ if __name__ == '__main__':
         email_data = GmailMboxMessage(email_obj)
         content, subject = email_data.parse_email()
         print(subject)
-        ip, date = parse_ip(content)
+        ip, date, event_type  = parse_ip(content)
         if(ip):
             table, id = parse_title(subject) #soc/ewa
             print(ip, table)
         if(ip and table):
             insert=True  
-            process(table, ip, id, date, subject, content, insert)
+            process(table, ip, id, date, event_type, subject, content, insert)
 
