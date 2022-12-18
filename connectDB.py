@@ -18,7 +18,7 @@ def smallest_domain(subnet_list):
 
 def getSubnet(ip):
   
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    db = MySQLdb.connect("localhost", "root", "pwd", "DB", charset="utf8")
     cursor = db.cursor()
     sql = "select * from school_net;"
     cursor.execute(sql)
