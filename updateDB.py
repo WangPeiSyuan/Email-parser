@@ -42,7 +42,6 @@ for row in cursor:
 db.close()
 
 df = pd.DataFrame({'name': name_list, 'email': email_list, 'phone': phone_list, 'ip_network': ip_list})
-print(df)
 df = df.groupby('ip_network').agg(lambda x: ','.join(x[x.notna()]))
 
 ## update data in school_net
@@ -55,6 +54,7 @@ for idx, row in df.iterrows():
     cursor.execute(sql)
     db.commit()
 
-    print(cursor.rowcount, " record(s) affected")
+#    print(cursor.rowcount, " record(s) affected")
 db.close()
+print("Update successfully!")
 

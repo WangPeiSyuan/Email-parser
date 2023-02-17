@@ -27,6 +27,11 @@ three(){
 	python3 /var/www/soc/checkCompare.py
     pause
 } 
+
+four(){
+	python3 /var/www/soc/updateDB.py
+	pause
+}
  
 # function to display menus
 show_menus() {
@@ -34,10 +39,11 @@ show_menus() {
 	echo "~~~~~~~~~~~~~~~~~~~~~"	
 	echo " M A I N - M E N U"
 	echo "~~~~~~~~~~~~~~~~~~~~~"
-	echo "1. Check MailBOX"
-	echo "2. Check DataBase"
-	echo "3. Compare Mbox VS.DB"
-	echo "4. Exit"
+	echo "1. Check MailBOX: 查看 mailbox 7天內信件"
+	echo "2. Check DataBase: 查看 DB 7天內的信件"
+	echo "3. Compare Mbox VS.DB: 查看 mailbox 中的信件有沒有 insert 進 DB"
+	echo "4. Update school net DB: 更新網段資料表"
+	echo "5. Exit"
 }
 read_options(){
 	local choice
@@ -46,7 +52,8 @@ read_options(){
 		1) one ;;
 		2) two ;;
 		3) three ;;
-		4) exit 0;;
+		4) four ;;
+		5) exit 0;;
 		*) echo -e "${RED}Error...${STD}" && sleep 2
 	esac
 }
