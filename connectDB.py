@@ -20,7 +20,7 @@ def smallest_domain(subnet_list):
 
 def getSubnet(ip):
   
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    db = MySQLdb.connect("localhost", "root", "pwd", "DB", charset="utf8")
     cursor = db.cursor()
     sql = "select * from school_net;"
     cursor.execute(sql)
@@ -48,7 +48,7 @@ def getSubnet(ip):
 
 def insert2table(table, ip, id, date, event_type, content):
     
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    db = MySQLdb.connect("localhost", "root", "pwd", "DB", charset="utf8")
     cursor = db.cursor()
     if(table=="soc"):
         #insert into soc
@@ -100,7 +100,7 @@ def insert2table(table, ip, id, date, event_type, content):
 
 def checkID(table, id):
     
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    db = MySQLdb.connect("localhost", "root", "pwd", "DB", charset="utf8")
     cursor = db.cursor()
     if(table=="soc"):
         sql = "select * from soc where soc_id = '"+id+"';"
@@ -114,7 +114,7 @@ def checkID(table, id):
      
 def verifyID(table, id, transit):
     
-    db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+    db = MySQLdb.connect("localhost", "root", "pwd", "DB", charset="utf8")
     cursor = db.cursor()
     if(table=="soc"):
         sql = "update soc set verify = %s, verify_time = %s where soc_id = '"+id+"';"
