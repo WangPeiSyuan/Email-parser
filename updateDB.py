@@ -49,11 +49,14 @@ db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf
 cursor = db.cursor()
 count=0
 for idx, row in df.iterrows():
-
-    sql = "update school_net set admin_contact='"+row['name']+"', admin_tel='"+row['phone']+"', admin_mail='"+row['email']+"' where ip_network='"+idx+"';"
+    sql = "select ip_network from school_net;"
+    cursor.execute(sql)
+    if(cursor.rowcount!=0):
+        sql = "update school_net set admin_contact='"+row['name']+"', admin_tel='"+row['phone']+"', admin_mail='"+row['email']+"' where ip_network='"+idx+"';"
+    else:
+        sql = "insert into school_net (admin_contact, admin_tel, admin_mail, ip_network) values ("+row['name']+", "+row['phone']+","+row['email']+","+idx+");"
     cursor.execute(sql)
     db.commit()
-
 #    print(cursor.rowcount, " record(s) affected")
 db.close()
 print("Update successfully!")

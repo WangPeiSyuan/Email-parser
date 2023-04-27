@@ -4,13 +4,15 @@ import MySQLdb
 def isSubnet(ip, subnet):
     
     try:
+    # print(subnet, " ", ip)
         return ipaddress.IPv4Address(ip) in ipaddress.IPv4Network(subnet)
     except:
         return False
 
 def smallest_domain(subnet_list):
     mask=[]
-    mask=[subnet[1].split('/')[1] for subnet in subnet_list]
+    print(subnet_list)
+    mask=[subnet[2].split('/')[1] for subnet in subnet_list]
     max_value = max(mask)
     index = mask.index(max_value)
     #print(subnet_list[index])
@@ -24,23 +26,23 @@ def getSubnet(ip):
     cursor.execute(sql)
     subnet_list=[]
     for row in cursor:
-        subnet = row[1]
+        subnet = row[2]
         if(isSubnet(ip, subnet)):
             subnet_list.append(row) 
  #   print(subnet_list)
     if(len(subnet_list)==0):
-        return False, False, False, False, False
+        return False, False, False, False, False, False
     elif(len(subnet_list)==1):
         row=subnet_list[0]
     else: #multiple mask fit in ip need to find the smallest domain
         row = smallest_domain(subnet_list)        
     
-    network_name = row[0]
-    subnet = row[1]
-    admin_mail = row[5]
-    admin_line = row[3]
-    mail_notify = row[6]
-    line_notify = row[7]
+    network_name = row[1]
+    subnet = row[2]
+    admin_mail = row[6]
+    admin_line = row[4]
+    mail_notify = row[7]
+    line_notify = row[8]
     admin_mail = ''.join(admin_mail.split()) 
     return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name[0]
 

@@ -17,9 +17,9 @@ if __name__ == '__main__':
         if(ip and table):
             DB_data = checkID(table, id)
             if(DB_data):
-                print("Mbox:{} DB:{} 一致".format(id, DB_data[0]))
+                print("{} Mbox:{} DB:{} 一致".format(DB_data[1], id, DB_data[0]))
             else: 
-                print("Mbox:{} DB:{} 不一致".format(id, DB_data[0]))
+                print("{} Mbox DB 不一致".format(id))
     print("done")
                 
                         

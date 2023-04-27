@@ -182,6 +182,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
         
         return True
     elif(network_name=="none"):
+        print(network_name)
         admin_name = admin_info[2]
         admin_mail = admin_info[3].rstrip()
         from_user = formataddr((admin_name, admin_mail))

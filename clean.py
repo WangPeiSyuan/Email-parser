@@ -21,13 +21,13 @@ if __name__ == '__main__':
         if(ip):
             table, id = parse_title(subject) #soc/ewa
         if(ip and table):
-            result = checkID(table, id)
+            result = checkID(table, id)           
             if(result==False): #before cleaning mailbox, check if DB has the mail, if not insert it
                 insert=True
                 process(table, ip, id, date, event_type, subject, content, insert)
             
             result = checkID(table, id)
-            result_date = result[7]
+            result_date = result[8]
             if(result_date<date7):
                 print("Deleting "+ subject, " ", result_date)
                 last=idx

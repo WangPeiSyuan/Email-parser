@@ -47,7 +47,7 @@ show_menus() {
 }
 read_options(){
 	local choice
-	read -p "Enter choice [ 1 - 4] " choice
+	read -p "Enter choice [ 1 - 5] " choice
 	case $choice in
 		1) one ;;
 		2) two ;;
