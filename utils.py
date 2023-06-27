@@ -15,7 +15,7 @@ from email.utils import formataddr, parsedate
 import time
 
 DEBUG=False  #若為True，多寄給管理員
-SEND_EWA_FLAG=True #預設為False，EWA信件都不寄送，若為True就會寄送給各單位管理員
+SEND_EWA_FLAG=False #預設為False，如果是區網EWA信件都不寄送，若為True就會寄送給各單位管理員
 
 def get_html_text(html):
     try:
@@ -147,6 +147,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
         if((table=="ewa") and (SEND_EWA_FLAG==False) and ('140.115' not in data)):         # 不是中央大學的EWA不會發
             print("SEND_EWA_FLAG=False")
             return False
+        
         to_user=[]
         to_mail=''.join(to_mail.split())
         to_mail = to_mail.split(',')
