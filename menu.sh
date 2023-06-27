@@ -32,6 +32,10 @@ four(){
 	python3 /var/www/soc/updateDB.py
 	pause
 }
+five(){
+	python3 /var/www/soc/compare_schoolnet.py
+	pause
+}
  
 # function to display menus
 show_menus() {
@@ -43,17 +47,19 @@ show_menus() {
 	echo "2. Check DataBase: 查看 DB 7天內的信件"
 	echo "3. Compare Mbox VS.DB: 查看 mailbox 中的信件有沒有 insert 進 DB"
 	echo "4. Update school net DB: 更新網段資料表"
-	echo "5. Exit"
+	echo "5. Compare school net DB VS. SNMG: 比對現有網段資料與SNMG DB"
+	echo "6. Exit"
 }
 read_options(){
 	local choice
-	read -p "Enter choice [ 1 - 5] " choice
+	read -p "Enter choice [ 1 - 6] " choice
 	case $choice in
 		1) one ;;
 		2) two ;;
 		3) three ;;
 		4) four ;;
-		5) exit 0;;
+		5) five ;;
+		6) exit 0;;
 		*) echo -e "${RED}Error...${STD}" && sleep 2
 	esac
 }

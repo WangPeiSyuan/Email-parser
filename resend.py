@@ -12,7 +12,7 @@ opt = parser.parse_args()
 if __name__ == '__main__':
     mbox_obj = mailbox.mbox('/var/mail/soc')
     num_entries = len(mbox_obj)
-
+    send = False
     for idx, email_obj in enumerate(mbox_obj):
         email_data = GmailMboxMessage(email_obj)
         content, subject = email_data.parse_email()
@@ -22,5 +22,9 @@ if __name__ == '__main__':
         if(id == opt.id):  
             insert = False
             process(table, ip, id, date, event_type, subject, content, insert)
+            send = True
+            print("寄送成功")
             break
+    if(send == False):
+        print("寄送失敗，信箱只保留7天內信件，此信已不存於信箱")
 

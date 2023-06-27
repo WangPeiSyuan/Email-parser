@@ -14,8 +14,8 @@ from sender import *
 from email.utils import formataddr, parsedate
 import time
 
-DEBUG=True 
-SEND_EWA_FLAG=False
+DEBUG=False  #若為True，多寄給管理員
+SEND_EWA_FLAG=True #預設為False，EWA信件都不寄送，若為True就會寄送給各單位管理員
 
 def get_html_text(html):
     try:
@@ -133,11 +133,10 @@ def process(table, ip, id, date, event_type, subject, content, insert):
         data, to_mail, to_line, mail_no, line_no, network_name = insert2table(table, ip, id, date, event_type, content)
     else:
         data, to_mail, to_line, mail_no, line_no, network_name = getSubnet(ip)
+    print("network name:", network_name)
     title = "[NEW]-教育機構資安通報-("+str(network_name)+str(ip)+")"+str(subject)
-    
-    if(table=="ewa" and SEND_EWA_FLAG==False):
-        print("SEND_EWA_FLAG=False")
-        return False
+    print("data:", data)
+   
 
     f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
     header = f.read()
@@ -145,8 +144,9 @@ def process(table, ip, id, date, event_type, subject, content, insert):
     admin_info = f.read()
     admin_info = admin_info.split(';')
     if(data):
-
-        
+        if((table=="ewa") and (SEND_EWA_FLAG==False) and ('140.115' not in data)):         # 不是中央大學的EWA不會發
+            print("SEND_EWA_FLAG=False")
+            return False
         to_user=[]
         to_mail=''.join(to_mail.split())
         to_mail = to_mail.split(',')
@@ -163,7 +163,8 @@ def process(table, ip, id, date, event_type, subject, content, insert):
             admin_name = admin_info[0]
             admin_mail = admin_info[1].rstrip()
             content = header+"<br>"+content
-            to_user = to_user + ['center2@cc.ncu.edu.tw', 'center25@cc.ncu.edu.tw','center24@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw']
+            #正式上線時會通知的管理員
+            to_user = to_user + ['center2@cc.ncu.edu.tw', 'center25@cc.ncu.edu.tw','center24@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw'] 
         else: 
             admin_name = admin_info[2]
             admin_mail = admin_info[3].rstrip()
@@ -171,6 +172,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
         from_user = formataddr((admin_name, admin_mail))
         if(DEBUG==True):
             content = str(to_user)+"<br>"+content
+            #測試時通知的管理員
             to_user = ['peiswang824@gmail.com', '110522127@cc.ncu.edu.tw', 'center20@cc.ncu.edu.tw', 'center15@cc.ncu.edu.tw', ' tyrc@ncu.edu.tw']
         print("mail no:", mail_no, " line no:", line_no)
         if(mail_no=="1"):
@@ -181,7 +183,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
             send_line(title, to_chat)
         
         return True
-    elif(network_name=="none"):
+    elif(network_name=="none" and ('140.115' in str(ip))):
         print(network_name)
         admin_name = admin_info[2]
         admin_mail = admin_info[3].rstrip()
