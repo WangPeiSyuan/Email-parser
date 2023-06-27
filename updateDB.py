@@ -28,7 +28,7 @@ for row in cursor:
             name_list.append(row[0])
             email_list.append(row[1])
             phone_list.append(row[2])
-            office_list.append('中央大學'+row[5])
+            office_list.append('中大'+row[5])
             ip_list.append(ip)
 
 sql =  "select std_name,email,phone,student.did,ip_range,dept.dept from student join dept on student.did=dept.did ;"
@@ -45,13 +45,13 @@ for row in cursor:
             name_list.append(row[0])
             email_list.append(row[1])
             phone_list.append(row[2])
-            office_list.append('中央大學'+row[5])
+            office_list.append('中大'+row[5])
             ip_list.append(ip)
 db.close()
 
 df = pd.DataFrame({'name': name_list, 'email': email_list, 'phone': phone_list, 'ip_network': ip_list, 'office':office_list})
 # print(df)
-df = df.groupby(['ip_network', 'office']).agg(lambda x: ','.join(x[x.notna()]))
+df = df.groupby(['ip_network']).agg(lambda x: ','.join(x[x.notna()]))
 # print(df)
 ## update data in school_net
 db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
@@ -59,14 +59,17 @@ cursor = db.cursor()
 update_cnt = 0
 insert_cnt = 0
 sql_list = []
+except_ip = ['140.115.183.0/24', '140.115.184.0/24', '140.115.185.0/24','140.115.186.0/24','140.115.187.0/24']
 for idx, row in df.iterrows():
-    sql = "select ip_network from school_net where ip_network='"+idx[0]+"';"
+    sql = "select ip_network from school_net where ip_network='"+idx+"';"
     cursor.execute(sql)
+    if((idx not in except_ip) and len(row['office'].split(","))>1):
+        row['office'] = row['office'].split(',')[0]
     if(cursor.rowcount!=0):
-        sql = "update school_net set admin_contact='"+row['name']+"', admin_tel='"+row['phone']+"', admin_mail='"+row['email']+"', network_name='"+idx[1]+"' where ip_network='"+idx[0]+"';"
+        sql = "update school_net set admin_contact='"+row['name']+"', admin_tel='"+row['phone']+"', admin_mail='"+row['email']+"', network_name='"+row['office']+" ' where ip_network='"+idx+"';"
         update_cnt += 1
     else:
-        sql = "insert into school_net (admin_contact, admin_tel, admin_mail, ip_network, network_name, mail_notify, line_notify) values ('"+row['name']+"', '"+row['phone']+"','"+row['email']+"','"+idx[0]+"','"+idx[1]+"', '1', '0');"
+        sql = "insert into school_net (admin_contact, admin_tel, admin_mail, ip_network, network_name, mail_notify, line_notify) values ('"+row['name']+"', '"+row['phone']+"','"+row['email']+"','"+row['office']+"','"+idx[1]+"', '1', '0');"
         insert_cnt += 1
     sql_list.append(sql)
 

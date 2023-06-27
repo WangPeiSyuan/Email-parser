@@ -144,7 +144,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
     admin_info = f.read()
     admin_info = admin_info.split(';')
     if(data):
-        if((table=="ewa") and (SEND_EWA_FLAG==False) and ('140.115' not in data)):         # 不是中央大學的EWA不會發
+        if((table=="ewa") and (SEND_EWA_FLAG==False) and ('140.115' not in data) and ('203.71.2' not in data)):         # 不是中央大學的EWA不會發
             print("SEND_EWA_FLAG=False")
             return False
         
@@ -156,10 +156,11 @@ def process(table, ip, id, date, event_type, subject, content, insert):
         to_user.append("tyrc@ncu.edu.tw")
         
         to_chat=[]
-        to_line=''.join(to_line.split())
-        to_line = to_line.split(',')
-        for chat in to_line:
-            to_chat.append(chat)
+        if(to_line):
+            to_line=''.join(to_line.split())
+            to_line = to_line.split(',')
+            for chat in to_line:
+                to_chat.append(chat)    
         if('140.115' in data):
             admin_name = admin_info[0]
             admin_mail = admin_info[1].rstrip()
