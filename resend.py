@@ -21,9 +21,9 @@ if __name__ == '__main__':
             table, id = parse_title(str(subject)) #soc/ewa
         if(id == opt.id):  
             insert = False
-            process(table, ip, id, date, event_type, subject, content, insert)
+            # process(table, ip, id, date, event_type, subject, content, insert)
             send = True
-            print("寄送成功")
+            print("{} 寄送成功".format(id))
             break
     if(send == False):
         print("寄送失敗，信箱只保留7天內信件，此信已不存於信箱")

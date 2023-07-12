@@ -13,6 +13,8 @@ from connectDB import *
 from sender import *
 from email.utils import formataddr, parsedate
 import time
+import warnings
+warnings.filterwarnings("ignore")
 
 DEBUG=False  #若為True，多寄給管理員
 SEND_EWA_FLAG=False #預設為False，如果是區網EWA信件都不寄送，若為True就會寄送給各單位管理員
@@ -166,7 +168,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
             admin_mail = admin_info[1].rstrip()
             content = header+"<br>"+content
             #正式上線時會通知的管理員
-            to_user = to_user + ['center2@cc.ncu.edu.tw', 'center25@cc.ncu.edu.tw','center24@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw'] 
+            to_user = to_user + ['center2@cc.ncu.edu.tw', 'center25@cc.ncu.edu.tw','center24@cc.ncu.edu.tw','center20@cc.ncu.edu.tw','center15@cc.ncu.edu.tw','cym@cc.ncu.edu.tw'] 
         else: 
             admin_name = admin_info[2]
             admin_mail = admin_info[3].rstrip()
