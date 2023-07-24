@@ -1,6 +1,12 @@
 import MySQLdb
 
-db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+data = configparser.ConfigParser()
+data.read('config.ini')
+host = data['tyrcDB']['HOST']
+user = data['tyrcDB']['USER']
+passwd = data['tyrcDB']['PASSWORD']
+db = data['tyrcDB']['DB']
+db = MySQLdb.connect(host, user, passwd, db, charset="utf8")
 cursor = db.cursor()
 
 str=""

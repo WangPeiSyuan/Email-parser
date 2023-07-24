@@ -1,13 +1,15 @@
 import MySQLdb
 import pandas as pd
+import configparser
 
 ## get data from sysmgrdb and preprocess 
-HOST="140.115.17.196"
-DATABASE="sysmgrdb"
-USER="tyrc_ncu"
-PASSWORD="Merry34!"
-
-db = MySQLdb.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
+data = configparser.ConfigParser()
+data.read('config.ini')
+host = data['sysmgrDB']['HOST']
+user = data['sysmgrDB']['USER']
+passwd = data['sysmgrDB']['PASSWORD']
+database = data['sysmgrDB']['DB']
+db = MySQLdb.connect(host, user, passwd, database)
 cursor = db.cursor()
 sql = "select name,email,phone,faculty.did,ip_range,dept.dept from faculty join dept on faculty.did=dept.did where faculty.did<>'cc';" ##排除電算中心人員，因人員太多異動頻繁
 cursor.execute(sql)
@@ -54,7 +56,14 @@ df = pd.DataFrame({'name': name_list, 'email': email_list, 'phone': phone_list, 
 df = df.groupby(['ip_network']).agg(lambda x: ','.join(x[x.notna()]))
 # print(df)
 ## update data in school_net
-db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+data = configparser.ConfigParser()
+data.read('config.ini')
+host = data['tyrcDB']['HOST']
+user = data['tyrcDB']['USER']
+passwd = data['tyrcDB']['PASSWORD']
+db = data['tyrcDB']['DB']
+db = MySQLdb.connect(host, user, passwd, db, charset="utf8")
+
 cursor = db.cursor()
 update_cnt = 0
 insert_cnt = 0

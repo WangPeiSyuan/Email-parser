@@ -44,7 +44,7 @@ show_menus() {
 	echo " M A I N - M E N U"
 	echo "~~~~~~~~~~~~~~~~~~~~~"
 	echo "1. Check MailBOX: 查看 mailbox 7天內信件"
-	echo "2. Check DataBase: 查看 DB 7天內的信件"
+	echo "2. Check DataBase: 查看 DB 14天內的信件"
 	echo "3. Compare Mbox VS.DB: 查看 mailbox 中的信件有沒有 insert 進 DB"
 	echo "4. Update school net DB: 更新網段資料表"
 	echo "5. Compare school net DB VS. SNMG: 比對現有網段資料與SNMG DB"

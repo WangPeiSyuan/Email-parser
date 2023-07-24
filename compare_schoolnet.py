@@ -1,11 +1,14 @@
 import MySQLdb
+import configparser
 ## get data from sysmgrdb and preprocess 
-HOST="140.115.17.196"
-DATABASE="sysmgrdb"
-USER="tyrc_ncu"
-PASSWORD="Merry34!"
+data = configparser.ConfigParser()
+data.read('config.ini')
+host = data['sysmgrDB']['HOST']
+user = data['sysmgrDB']['USER']
+passwd = data['sysmgrDB']['PASSWORD']
+database = data['sysmgrDB']['DB']
+db = MySQLdb.connect(host, user, passwd, database)
 
-db = MySQLdb.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
 cursor = db.cursor()
 sql = "select name,email,phone,faculty.did,ip_range from faculty join dept on faculty.did=dept.did" ##排除電算中心人員，因人員太多異動頻繁
 cursor.execute(sql)
@@ -37,8 +40,14 @@ for row in cursor:
             ip_list.append(ip)
 db.close()
 ip_list = list(set(ip_list))
-# print(len(ip_list))
-db = MySQLdb.connect("localhost", "root", "Tyrcncu0930!", "tyrcDB", charset="utf8")
+data = configparser.ConfigParser()
+data.read('config.ini')
+host = data['tyrcDB']['HOST']
+user = data['tyrcDB']['USER']
+passwd = data['tyrcDB']['PASSWORD']
+database = data['tyrcDB']['DB']
+db = MySQLdb.connect(host, user, passwd, database, charset="utf8")
+
 cursor = db.cursor()
 sql = "select ip_network from school_net;"
 cursor.execute(sql)
