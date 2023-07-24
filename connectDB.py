@@ -33,7 +33,7 @@ def getSubnet(ip):
         if(isSubnet(ip, subnet)):
             subnet_list.append(row) 
     if(len(subnet_list)==0):
-        return False, False, False, False, False, "none"
+        return False, False, False, False, False, "none", False
     elif(len(subnet_list)==1):
         row=subnet_list[0]
     else: #multiple mask fit in ip need to find the smallest domain
@@ -44,9 +44,10 @@ def getSubnet(ip):
     admin_line = row[4]
     mail_notify = row[7]
     line_notify = row[8]
+    ewa_process = row[11]
     admin_mail = ''.join(admin_mail.split()) 
 
-    return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name
+    return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name, ewa_process
 
 def insert2table(table, ip, id, date, event_type, content):
     if(table=="soc"):
@@ -67,9 +68,8 @@ def insert2table(table, ip, id, date, event_type, content):
             subnet = row[2]
             if(isSubnet(ip, subnet)):
                 subnet_list.append(row) 
-                #   print(subnet_list)
         if(len(subnet_list)==0):
-            return False, False, False, False, False, "none"
+            return False, False, False, False, False, "none", False
         elif(len(subnet_list)==1):
             row=subnet_list[0]
         else: #multiple mask fit in ip need to find the smallest domain
@@ -88,12 +88,13 @@ def insert2table(table, ip, id, date, event_type, content):
         admin_line = row[4]
         mail_notify = row[7]
         line_notify = row[8]
+        ewa_process = row[11]
         admin_mail = ''.join(admin_mail.split())  
-        return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name
+        return subnet, admin_mail, admin_line, mail_notify, line_notify, network_name, ewa_process
     
     except:
         print(id, " already inserted!")
-        return False, False, False, False, False, False
+        return False, False, False, False, False, False, False
 
 def checkID(table, id):
     if(table=="soc"):

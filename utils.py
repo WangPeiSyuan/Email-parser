@@ -132,9 +132,9 @@ def parse_title(subject):
 
 def process(table, ip, id, date, event_type, subject, content, insert):
     if(insert==True):
-        data, to_mail, to_line, mail_no, line_no, network_name = insert2table(table, ip, id, date, event_type, content)
+        data, to_mail, to_line, mail_no, line_no, network_name, ewa_process = insert2table(table, ip, id, date, event_type, content)
     else:
-        data, to_mail, to_line, mail_no, line_no, network_name = getSubnet(ip)
+        data, to_mail, to_line, mail_no, line_no, network_name, ewa_process = getSubnet(ip)
     print("network name:", network_name)
     title = "[NEW]-教育機構資安通報-("+str(network_name)+str(ip)+")"+str(subject)
     print("data:", data)
@@ -146,8 +146,8 @@ def process(table, ip, id, date, event_type, subject, content, insert):
     admin_info = f.read()
     admin_info = admin_info.split(';')
     if(data):
-        if((table=="ewa") and (SEND_EWA_FLAG==False) and ('140.115' not in data) and ('203.71.2' not in data)):         # 不是中央大學的EWA不會發
-            print("SEND_EWA_FLAG=False")
+        if((table=="ewa") and ewa_process=='0'):         # 不是中央大學的EWA不會發
+            print("ewa不通知")
             return False
         
         to_user=[]
