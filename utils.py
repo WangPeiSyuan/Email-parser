@@ -135,10 +135,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
         data, to_mail, to_line, mail_no, line_no, network_name, ewa_process = insert2table(table, ip, id, date, event_type, content)
     else:
         data, to_mail, to_line, mail_no, line_no, network_name, ewa_process = getSubnet(ip)
-    print("network name:", network_name)
     title = "[NEW]-教育機構資安通報-("+str(network_name)+str(ip)+")"+str(subject)
-    print("data:", data)
-   
 
     f = open('/var/www/soc/ncu_admin/mail_content.txt', 'r')
     header = f.read()
@@ -147,7 +144,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
     admin_info = admin_info.split(';')
     if(data):
         if((table=="ewa") and ewa_process=='0'):         # 不是中央大學的EWA不會發
-            print("ewa不通知")
+            print("ewa不寄送")
             return False
         
         to_user=[]
@@ -187,7 +184,7 @@ def process(table, ip, id, date, event_type, subject, content, insert):
             send_line(title, to_chat)
         
         return True
-    elif(network_name=="none" and ('140.115' in str(ip))):
+    elif(network_name=="none"):
         print(network_name)
         admin_name = admin_info[2]
         admin_mail = admin_info[3].rstrip()

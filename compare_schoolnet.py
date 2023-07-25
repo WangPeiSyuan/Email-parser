@@ -2,7 +2,7 @@ import MySQLdb
 import configparser
 ## get data from sysmgrdb and preprocess 
 data = configparser.ConfigParser()
-data.read('config.ini')
+data.read('/var/www/soc/config.ini')
 host = data['sysmgrDB']['HOST']
 user = data['sysmgrDB']['USER']
 passwd = data['sysmgrDB']['PASSWORD']
@@ -41,7 +41,7 @@ for row in cursor:
 db.close()
 ip_list = list(set(ip_list))
 data = configparser.ConfigParser()
-data.read('config.ini')
+data.read('/var/www/soc/config.ini')
 host = data['tyrcDB']['HOST']
 user = data['tyrcDB']['USER']
 passwd = data['tyrcDB']['PASSWORD']

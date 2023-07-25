@@ -4,7 +4,7 @@ import configparser
 
 ## get data from sysmgrdb and preprocess 
 data = configparser.ConfigParser()
-data.read('config.ini')
+data.read('/var/www/soc/config.ini')
 host = data['sysmgrDB']['HOST']
 user = data['sysmgrDB']['USER']
 passwd = data['sysmgrDB']['PASSWORD']
@@ -57,7 +57,7 @@ df = df.groupby(['ip_network']).agg(lambda x: ','.join(x[x.notna()]))
 # print(df)
 ## update data in school_net
 data = configparser.ConfigParser()
-data.read('config.ini')
+data.read('/var/www/soc/config.ini')
 host = data['tyrcDB']['HOST']
 user = data['tyrcDB']['USER']
 passwd = data['tyrcDB']['PASSWORD']

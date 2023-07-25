@@ -6,7 +6,7 @@ import configparser
 def check():
 
     data = configparser.ConfigParser()
-    data.read('config.ini')
+    data.read('/var/www/soc/config.ini')
     host = data['tyrcDB']['HOST']
     user = data['tyrcDB']['USER']
     passwd = data['tyrcDB']['PASSWORD']
